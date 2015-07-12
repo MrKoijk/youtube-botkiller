@@ -1,5 +1,6 @@
 var forbiddenList_url = "https://raw.githubusercontent.com/MrKoijk/youtube-botkiller/master/json/forbidden.json";
 var forbidden_words;
+var forbidden_profiles;
 
 var execute = function() {
 	
@@ -11,7 +12,7 @@ var execute = function() {
 			username = el.attr('data-name'),
 			thisEl = $(this);
 		
-		if(banned_profiles.contains(profileId) || checkComment(comment)) {
+		if(forbidden_profiles.contains(profileId) || checkComment(comment)) {
 			
 			console.log(profileId + ": " + comment);
 			
