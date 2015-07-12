@@ -1,6 +1,45 @@
 var forbiddenList_url = "https://raw.githubusercontent.com/MrKoijk/youtube-botkiller/master/json/forbidden.json";
 var forbidden_words;
 
+var execute = function() {
+	
+	$(".comment-item").each(function(index, element) {
+		var el = $(element),
+			profileId = el.attr('data-aid'),
+			comment = el.find('.comment-text-content').first().text().trim(),
+			commenturl = el.attr('data-cid'),
+			username = el.attr('data-name'),
+			thisEl = $(this);
+		
+		if(banned_profiles.contains(profileId) || checkComment(comment)) {
+			
+			console.log(profileId + ": " + comment);
+			
+			if(thisEl.hasClass('reply')) {
+				thisEl.remove();
+			} else {
+				thisEl.closest('.comment-entry').remove();
+			}
+			
+			console.log("Removed: " + removed++);
+			$("#FakeCommentsHiderStats").html(removed);
+		} else if(!thisEl.hasClass("hide-fedora-tagged")) {
+			thisEl.addClass("hide-fedora-tagged");
+			
+			thisEl.find('.footer-button-bar')
+				.first()
+				.after('<button type="button" class="hide-fedora-report-btn">ZGŁOŚ PODSZYWAJĄCY SIĘ PROFIL</button>');
+
+			thisEl.find('.hide-fedora-report-btn')
+				.data('profileId', profileId)
+				.data('comment', comment)
+				.data('commenturl', commenturl)
+				.data('username', username)
+				.click(onReportClick);
+		}
+	});
+};
+
 $(function() {
 	$.getJSON(forbidden-list_url, function(result) {
 		forbidden_words = result.words;
